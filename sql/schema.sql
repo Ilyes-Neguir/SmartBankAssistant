@@ -1,0 +1,34 @@
+-- SmartBank Assistant schema (MySQL compatible)
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  name VARCHAR(255),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS accounts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  type VARCHAR(50) DEFAULT 'checking',
+  balance DECIMAL(12,2) DEFAULT 0,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS transactions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  account_from_id INT,
+  account_to_id INT,
+  amount DECIMAL(12,2) NOT NULL,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+  simulated BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE IF NOT EXISTS chat_sessions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  user_query TEXT,
+  bot_response TEXT,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);
