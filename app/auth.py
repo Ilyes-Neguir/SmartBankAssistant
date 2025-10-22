@@ -11,7 +11,8 @@ SECRET_KEY = os.getenv("SECRET_KEY", "dev-insecure-secret-change-me")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# Use Argon2 to avoid platform-specific bcrypt issues in CI
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 
 def verify_password(plain_password: str, password_hash: str) -> bool:
