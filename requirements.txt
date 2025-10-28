@@ -4,10 +4,12 @@ sqlalchemy
 pymysql
 alembic
 passlib[bcrypt]
+argon2-cffi
 python-jose[cryptography]
 pytest
 httpx
 pytest-asyncio
 python-dotenv
-pydantic
+pydantic[email]
+python-multipart
 loguru
