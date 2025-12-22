@@ -1,0 +1,81 @@
+@startuml Complete Sequence Diagram - SmartBank Assistant User Journey
+!theme plain
+
+actor "User" as User
+participant "Frontend\n(React)" as Frontend
+participant "Backend API\n(FastAPI)" as Backend
+participant "Database\n(PostgreSQL)" as DB
+participant "Gemini AI\n(Google)" as AI
+
+== User Registration & Login ==
+User -> Frontend: 1. Register (name, email, password)
+Frontend -> Backend: POST /api/auth/register
+Backend -> Backend: Validate email format
+Backend -> Backend: Hash password (bcrypt)
+Backend -> DB: INSERT INTO users
+DB --> Backend: User created
+Backend --> Frontend: 201 Created + User data
+Frontend -> Frontend: Show success message
+Frontend -> User: Redirect to login
+
+User -> Frontend: 2. Login (email, password)
+Frontend -> Backend: POST /api/auth/login
+Backend -> DB: SELECT user by email
+DB --> Backend: User data
+Backend -> Backend: Verify password (bcrypt)
+Backend -> Backend: Generate JWT token
+Backend --> Frontend: 200 OK + JWT token
+Frontend -> Frontend: Store token in localStorage
+Frontend -> User: Redirect to dashboard
+
+== Account Management ==
+User -> Frontend: 3. View accounts
+Frontend -> Backend: GET /api/accounts\n(Authorization: Bearer JWT)
+Backend -> Backend: Verify JWT token
+Backend -> DB: SELECT accounts WHERE user_id
+DB --> Backend: Account list
+Backend --> Frontend: 200 OK + Accounts
+Frontend -> User: Display accounts with balances
+
+== Transaction Management ==
+User -> Frontend: 4. Create transaction
+Frontend -> Frontend: Validate form
+Frontend -> Backend: POST /api/transactions\n(Authorization: Bearer JWT)
+Backend -> Backend: Verify JWT token
+Backend -> Backend: Validate transaction data
+Backend -> DB: SELECT account
+DB --> Backend: Account data
+Backend -> Backend: Check balance (if withdrawal)
+Backend -> DB: INSERT transaction
+Backend -> DB: UPDATE account balance
+DB --> Backend: Transaction created
+Backend --> Frontend: 201 Created + Transaction
+Frontend -> User: Show success message
+
+== AI Chatbot Interaction ==
+User -> Frontend: 5. Send chat message\n"What's my balance?"
+Frontend -> Backend: POST /api/chat/message\n(Authorization: Bearer JWT)
+Backend -> Backend: Verify JWT token
+Backend -> DB: INSERT chat log (user message)
+Backend -> DB: SELECT user accounts
+Backend -> DB: SELECT recent transactions
+DB --> Backend: User context data
+Backend -> Backend: Prepare context for AI
+Backend -> AI: Send message + context\n(User accounts, transactions)
+AI --> Backend: AI response + intent\n"Your total balance is $X"
+Backend -> DB: UPDATE chat log (bot response)
+Backend --> Frontend: Chat log with response
+Frontend -> Frontend: Display message + response
+Frontend -> User: Show conversation
+
+== View Transaction History ==
+User -> Frontend: 6. View transactions
+Frontend -> Backend: GET /api/transactions\n(Authorization: Bearer JWT)
+Backend -> Backend: Verify JWT token
+Backend -> DB: SELECT transactions WHERE user_id
+DB --> Backend: Transaction list
+Backend --> Frontend: 200 OK + Transactions
+Frontend -> User: Display transaction history
+
+@enduml
+

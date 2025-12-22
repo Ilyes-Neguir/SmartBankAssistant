@@ -1,0 +1,77 @@
+@startuml System Architecture Diagram - SmartBank Assistant
+!theme plain
+
+package "Client Layer" {
+  actor "User" as User
+  [Web Browser] as Browser
+}
+
+package "Frontend Layer\n(React + TypeScript)" {
+  [React UI Components] as UI
+  [State Management\n(useAuth Hook)] as State
+  [API Client\n(Axios)] as APIClient
+  [Pages\nLogin, Dashboard, Accounts,\nTransactions, Chat] as Pages
+}
+
+package "Backend Layer\n(FastAPI + Python)" {
+  [FastAPI REST API] as API
+  [Authentication Module\nJWT + Bcrypt] as Auth
+  [Business Logic\nCRUD Operations] as Business
+  [AI Service\nGemini Integration] as AIService
+  [Routes\n/auth, /accounts, /transactions, /chat] as Routes
+}
+
+package "Data Layer" {
+  [SQLAlchemy ORM] as ORM
+  database "PostgreSQL Database" as DB {
+    [Users Table] as UsersTable
+    [Accounts Table] as AccountsTable
+    [Transactions Table] as TransactionsTable
+    [ChatLogs Table] as ChatLogsTable
+  }
+}
+
+cloud "External Services" {
+  [Google Gemini AI API] as Gemini
+}
+
+' User interactions
+User --> Browser
+Browser --> UI
+
+' Frontend flow
+UI --> State
+State --> Pages
+Pages --> APIClient
+APIClient --> API
+
+' Backend flow
+API --> Routes
+Routes --> Auth
+Routes --> Business
+Routes --> AIService
+Business --> ORM
+Auth --> ORM
+AIService --> Gemini
+
+' Database flow
+ORM --> DB
+DB --> UsersTable
+DB --> AccountsTable
+DB --> TransactionsTable
+DB --> ChatLogsTable
+
+note right of AIService
+  Processes natural language
+  queries with user context
+  (accounts, transactions)
+end note
+
+note right of Auth
+  JWT token generation
+  Password hashing (bcrypt)
+  Protected routes
+end note
+
+@enduml
+

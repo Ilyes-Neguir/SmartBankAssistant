@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: smartbank-postgres
+    environment:
+      POSTGRES_DB: smartbank
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d smartbank"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Uncomment these services if you want to run everything in Docker
+  # backend:
+  #   build: ./backend
+  #   container_name: smartbank-backend
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - DATABASE_URL=postgresql+asyncpg://user:password@postgres:5432/smartbank
+  #     - SECRET_KEY=your-secret-key-here
+  #     - GEMINI_API_KEY=your-gemini-api-key-here
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   volumes:
+  #     - ./backend:/app
+
+  # frontend:
+  #   build: ./frontend
+  #   container_name: smartbank-frontend
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - VITE_API_URL=http://localhost:8000
+  #   depends_on:
+  #     - backend
+  #   volumes:
+  #     - ./frontend:/app
+
+volumes:
+  postgres_data:

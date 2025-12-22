@@ -1,0 +1,59 @@
+========================================
+COMMANDES POUR PUSH SUR GITHUB
+========================================
+
+Copie-colle ces commandes DANS TON TERMINAL (où Git fonctionne):
+
+1. Configurer ton identité Git:
+   git config user.email "ton-email@example.com"
+   git config user.name "Ilyes Neguir"
+
+2. Vérifier le dépôt:
+   git status
+
+3. Ajouter le remote (si pas déjà fait):
+   git remote add origin https://github.com/Ilyes-Neguir/SmartBankAssistant.git
+
+4. Ajouter tous les fichiers:
+   git add .
+
+5. Créer le commit:
+   git commit -m "Complete SmartBank Assistant project - Full-stack banking app with AI chatbot, documentation, presentation, and UML diagrams"
+
+6. Définir la branche principale:
+   git branch -M main
+
+7. Pousser vers GitHub:
+   git push -u origin main
+
+========================================
+AUTHENTIFICATION
+========================================
+
+Quand Git demande tes identifiants:
+- Username: Ilyes-Neguir
+- Password: Utilise un Personal Access Token
+
+Pour créer un token:
+1. Va sur: https://github.com/settings/tokens
+2. Generate new token (classic)
+3. Sélectionne scope: repo (full control)
+4. Copie le token et utilise-le comme mot de passe
+
+========================================
+APRÈS LE PUSH
+========================================
+
+Ton dépôt sera sur:
+https://github.com/Ilyes-Neguir/SmartBankAssistant
+
+Tous tes fichiers seront visibles:
+- Code source complet
+- PROJECT_REPORT.md
+- presentation.html
+- Documentation des 13 semaines
+- Diagrammes UML
+- Tous les fichiers de configuration
+
+========================================
+

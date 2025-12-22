@@ -1,0 +1,186 @@
+@startuml Complete Class Diagram - SmartBank Assistant
+!theme plain
+skinparam classAttributeIconSize 0
+
+' Database Models
+class User {
+  +String id
+  +String name
+  +String email
+  +String hashed_password
+  +DateTime created_at
+  --
+  +List<Account> accounts
+  +List<ChatLog> chat_logs
+}
+
+class Account {
+  +String id
+  +String user_id
+  +String account_type
+  +Float balance
+  +String currency
+  +String account_number
+  +DateTime created_at
+  --
+  +User owner
+  +List<Transaction> transactions
+}
+
+class Transaction {
+  +String id
+  +String account_id
+  +Float amount
+  +String type
+  +DateTime timestamp
+  +String description
+  +String category
+  +String from_account_id
+  +String to_account_id
+  --
+  +Account account
+  +Account from_account
+  +Account to_account
+}
+
+class ChatLog {
+  +String id
+  +String user_id
+  +String message
+  +String bot_response
+  +String intent_detected
+  +DateTime timestamp
+  +String is_user
+  --
+  +User user
+}
+
+' Backend API Classes
+class FastAPI {
+  +Router auth_router
+  +Router account_router
+  +Router transaction_router
+  +Router chat_router
+  +Middleware cors_middleware
+}
+
+class AuthRouter {
+  +register()
+  +login()
+  +logout()
+}
+
+class AccountRouter {
+  +get_accounts()
+  +create_account()
+  +get_account()
+}
+
+class TransactionRouter {
+  +get_transactions()
+  +create_transaction()
+  +get_transaction()
+}
+
+class ChatRouter {
+  +send_message()
+  +get_chat_history()
+}
+
+class GeminiService {
+  -GenerativeModel model
+  +process_banking_query()
+  -create_banking_prompt()
+  -detect_intent()
+}
+
+class JWTHandler {
+  +create_access_token()
+  +verify_token()
+  +get_current_user()
+}
+
+' Frontend Components
+class App {
+  +Router router
+  +AuthProvider authProvider
+  +Routes routes
+}
+
+class AuthProvider {
+  +User user
+  +boolean loading
+  +login()
+  +logout()
+  +register()
+}
+
+class LoginPage {
+  +FormData formData
+  +handleSubmit()
+}
+
+class DashboardPage {
+  +Account[] accounts
+  +Transaction[] transactions
+  +loadData()
+}
+
+class AccountsPage {
+  +Account[] accounts
+  +loadAccounts()
+  +createAccount()
+}
+
+class TransactionsPage {
+  +Transaction[] transactions
+  +loadTransactions()
+  +createTransaction()
+}
+
+class ChatPage {
+  +ChatMessage[] messages
+  +sendMessage()
+  +loadHistory()
+}
+
+class APIService {
+  +get()
+  +post()
+  +put()
+  +delete()
+}
+
+' Relationships - Database Models
+User "1" --> "*" Account : owns
+User "1" --> "*" ChatLog : has
+Account "1" --> "*" Transaction : contains
+Account "1" --> "*" Transaction : from_account
+Account "1" --> "*" Transaction : to_account
+
+' Relationships - Backend
+FastAPI --> AuthRouter
+FastAPI --> AccountRouter
+FastAPI --> TransactionRouter
+FastAPI --> ChatRouter
+ChatRouter --> GeminiService
+AuthRouter --> JWTHandler
+AccountRouter --> Account
+TransactionRouter --> Transaction
+ChatRouter --> ChatLog
+
+' Relationships - Frontend
+App --> AuthProvider
+App --> LoginPage
+App --> DashboardPage
+App --> AccountsPage
+App --> TransactionsPage
+App --> ChatPage
+LoginPage --> APIService
+DashboardPage --> APIService
+AccountsPage --> APIService
+TransactionsPage --> APIService
+ChatPage --> APIService
+APIService --> FastAPI
+
+@enduml

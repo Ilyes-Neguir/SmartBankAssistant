@@ -1,0 +1,106 @@
+@startuml Use Case Diagram - SmartBank Assistant
+!theme plain
+left to right direction
+
+actor "Banking Customer" as User
+
+rectangle "SmartBank Assistant System" {
+
+  rectangle "Authentication & Authorization" {
+    (Register Account) as UC1
+    (Login to System) as UC2
+    (Logout) as UC3
+  }
+
+  rectangle "Account Management" {
+    (View All Accounts) as UC4
+    (View Account Balance) as UC5
+    (Create New Account) as UC6
+    (View Account Details) as UC7
+  }
+
+  rectangle "Transaction Management" {
+    (View Transaction History) as UC8
+    (Create Deposit) as UC9
+    (Create Withdrawal) as UC10
+    (Create Transfer) as UC11
+    (View Transaction Details) as UC12
+  }
+
+  rectangle "AI Chatbot Features" {
+    (Send Chat Message) as UC13
+    (View Chat History) as UC14
+    (Get Account Balance via Chat) as UC15
+    (Get Transaction Info via Chat) as UC16
+    (Get Banking Product Info) as UC17
+  }
+
+  rectangle "Dashboard & Navigation" {
+    (View Dashboard) as UC18
+    (Navigate to Accounts) as UC19
+    (Navigate to Transactions) as UC20
+    (Navigate to Chat) as UC21
+  }
+}
+
+' User connections
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
+User --> UC6
+User --> UC7
+User --> UC8
+User --> UC9
+User --> UC10
+User --> UC11
+User --> UC12
+User --> UC13
+User --> UC14
+User --> UC15
+User --> UC16
+User --> UC17
+User --> UC18
+User --> UC19
+User --> UC20
+User --> UC21
+
+' Dependencies
+UC2 ..> UC4 : <<requires>>
+UC2 ..> UC5 : <<requires>>
+UC2 ..> UC6 : <<requires>>
+UC2 ..> UC7 : <<requires>>
+UC2 ..> UC8 : <<requires>>
+UC2 ..> UC9 : <<requires>>
+UC2 ..> UC10 : <<requires>>
+UC2 ..> UC11 : <<requires>>
+UC2 ..> UC12 : <<requires>>
+UC2 ..> UC13 : <<requires>>
+UC2 ..> UC14 : <<requires>>
+UC2 ..> UC15 : <<requires>>
+UC2 ..> UC16 : <<requires>>
+UC2 ..> UC17 : <<requires>>
+UC2 ..> UC18 : <<requires>>
+
+UC4 ..> UC5 : <<includes>>
+UC8 ..> UC12 : <<includes>>
+UC13 ..> UC14 : <<extends>>
+UC13 ..> UC15 : <<extends>>
+UC13 ..> UC16 : <<extends>>
+UC13 ..> UC17 : <<extends>>
+
+note right of UC13
+  AI Chatbot supports
+  natural language queries
+  in English and French
+end note
+
+note right of UC2
+  JWT-based authentication
+  required for all protected
+  features
+end note
+
+@enduml
+
